@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { getCurrentUser, handleLogout } from "@/lib/auth";
-import { getLatestMetrics, insertMetrics, updateMetrics, type MetricInput, type MetricRecord } from "@/lib/db";
+import { getLatestMetrics, getProfile, insertMetrics, updateMetrics, type MetricInput, type MetricRecord } from "@/lib/db";
 
 const defaultMetrics: MetricInput = {
   mrr: 0,
@@ -44,6 +44,13 @@ export default function DashboardPage() {
       const user = await getCurrentUser();
       if (!user) {
         router.replace("/login");
+        return;
+      }
+
+      // Onboarding guard
+      const { data: profile } = await getProfile(user.id);
+      if (!profile?.onboarding_completed) {
+        router.replace("/onboarding");
         return;
       }
 

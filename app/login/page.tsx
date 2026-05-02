@@ -8,6 +8,7 @@ import { AuthCard } from "@/components/AuthCard";
 import { Button } from "@/components/Button";
 import { InputField } from "@/components/InputField";
 import { handleLogin as loginWithSupabase } from "@/lib/auth";
+import { getProfile } from "@/lib/db";
 
 type LoginValues = {
   email: string;
@@ -59,6 +60,7 @@ export default function LoginPage() {
     if (result.error) {
       throw new Error(result.error);
     }
+    return result;
   };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -73,8 +75,19 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
       setAuthError(null);
+      const { supabase } = await import("@/lib/supabaseClient");
       await handleLogin(values);
-      router.replace("/dashboard");
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await getProfile(user.id);
+        if (profile?.onboarding_completed) {
+          router.replace("/dashboard");
+        } else {
+          router.replace("/onboarding");
+        }
+      } else {
+        router.replace("/onboarding");
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unable to log in right now.";
       setAuthError(message);

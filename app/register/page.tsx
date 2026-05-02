@@ -98,7 +98,7 @@ export default function RegisterPage() {
       if (result.needsEmailConfirmation) {
         setSuccessMessage("Check your inbox to confirm your email before logging in.");
       } else {
-        router.replace("/dashboard");
+        router.replace("/onboarding");
       }
       setValues({ name: "", email: "", password: "" });
       setErrors({});
