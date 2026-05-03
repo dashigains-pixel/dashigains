@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #020617;
-  --foreground: #f8fafc;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --primary: #6366F1;
+  --primary-light: #EEF2FF;
+  --border: #E2E8F0;
+  --card: #FFFFFF;
+  --sidebar: #F1F5F9;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
 }
 
 @theme inline {
@@ -19,4 +26,8 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
 }

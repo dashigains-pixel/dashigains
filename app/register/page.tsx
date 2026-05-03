@@ -111,8 +111,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#020b17] px-4 py-10">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.2),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(34,211,238,0.16),transparent_30%),linear-gradient(rgba(12,26,45,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(12,26,45,0.5)_1px,transparent_1px)] [background-size:100%_100%,100%_100%,52px_52px,52px_52px]" />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8FAFC] px-4 py-10">
+      {/* Subtle decorative gradient */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.07),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(99,102,241,0.05),transparent_40%)]" />
 
       <AuthCard
         title="Create account"
@@ -120,13 +121,13 @@ export default function RegisterPage() {
         footer={
           <>
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-emerald-300 transition hover:text-emerald-200">
+            <Link href="/login" className="font-medium text-[#6366F1] transition hover:text-[#4F46E5]">
               Log in
             </Link>
           </>
         }
       >
-        <form className="space-y-5" onSubmit={onSubmit} noValidate>
+        <form className="space-y-4" onSubmit={onSubmit} noValidate>
           <InputField
             label="Name"
             type="text"
@@ -160,8 +161,8 @@ export default function RegisterPage() {
           <Button type="submit" isLoading={isLoading} disabled={isFormEmpty}>
             Register
           </Button>
-          {authError ? <p className="text-sm text-rose-300">{authError}</p> : null}
-          {successMessage ? <p className="text-sm text-emerald-300">{successMessage}</p> : null}
+          {authError ? <p className="text-sm text-[#EF4444]">{authError}</p> : null}
+          {successMessage ? <p className="text-sm text-[#22C55E]">{successMessage}</p> : null}
         </form>
       </AuthCard>
     </main>

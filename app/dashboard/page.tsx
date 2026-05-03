@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
@@ -11,6 +13,32 @@ const defaultMetrics: MetricInput = {
   churn_rate: 0,
   expenses: 0,
   profit: 0,
+};
+
+// Icon helpers
+const icons = {
+  mrr: (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 3V21M17 8C17 6.34 14.76 5 12 5C9.24 5 7 6.34 7 8C7 9.66 9.24 11 12 11C14.76 11 17 12.34 17 14C17 15.66 14.76 17 12 17C9.24 17 7 15.66 7 14" strokeLinecap="round" />
+    </svg>
+  ),
+  churn: (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M3 20H21M5 11L9 7L13 11L19 5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  expenses: (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" strokeLinecap="round" />
+    </svg>
+  ),
+  profit: (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M4 15L9 10L13 14L20 7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20 7H15M20 7V12" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
 };
 
 export default function DashboardPage() {
@@ -120,57 +148,102 @@ export default function DashboardPage() {
 
   if (isPageLoading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#020b17] text-slate-200">
-        <p>Loading dashboard...</p>
+      <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#E2E8F0] border-t-[#6366F1]" />
+          <p className="text-sm text-[#475569]">Loading dashboard…</p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#020b17] px-4 py-10 text-slate-100">
-      <div className="mx-auto max-w-4xl space-y-6">
-        <div className="rounded-3xl border border-emerald-300/15 bg-slate-950/70 p-6 shadow-xl shadow-emerald-950/25 backdrop-blur-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+    <main className="min-h-screen bg-[#F8FAFC]">
+      {/* Top bar */}
+      <header className="sticky top-0 z-10 border-b border-[#E2E8F0] bg-white px-4 py-4 sm:px-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#EEF2FF] text-sm font-bold text-[#6366F1]">D</span>
             <div>
-              <p className="text-sm text-slate-400">Dashigains Dashboard</p>
-              <h1 className="text-3xl font-semibold text-white">Your SaaS Metrics</h1>
+              <p className="text-xs text-[#94A3B8]">Dashigains</p>
+              <h1 className="text-base font-semibold text-[#0F172A]">Your SaaS Metrics</h1>
             </div>
-            <Button type="button" isLoading={isLoggingOut} disabled={isLoggingOut} onClick={onLogout}>
-              Logout
-            </Button>
           </div>
+          <Button type="button" isLoading={isLoggingOut} disabled={isLoggingOut} onClick={onLogout} variant="secondary">
+            Logout
+          </Button>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6">
+
+        {/* Metric cards */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard
+            label="MRR"
+            value={metrics.mrr}
+            icon={icons.mrr}
+            iconBg="bg-[#DCFCE7]"
+            iconColor="text-[#22C55E]"
+          />
+          <MetricCard
+            label="Churn Rate"
+            value={metrics.churn_rate}
+            suffix="%"
+            icon={icons.churn}
+            iconBg="bg-[#FEF3C7]"
+            iconColor="text-[#F59E0B]"
+          />
+          <MetricCard
+            label="Expenses"
+            value={metrics.expenses}
+            icon={icons.expenses}
+            iconBg="bg-[#FEE2E2]"
+            iconColor="text-[#EF4444]"
+          />
+          <MetricCard
+            label="Profit"
+            value={metrics.profit}
+            icon={icons.profit}
+            iconBg="bg-[#EEF2FF]"
+            iconColor="text-[#6366F1]"
+          />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <MetricCard label="MRR" value={metrics.mrr} />
-          <MetricCard label="Churn Rate" value={metrics.churn_rate} suffix="%" />
-          <MetricCard label="Expenses" value={metrics.expenses} />
-          <MetricCard label="Profit" value={metrics.profit} />
-        </div>
+        {/* Update metrics form */}
+        <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+          <div className="mb-5">
+            <h2 className="text-lg font-semibold text-[#0F172A]">Update Metrics</h2>
+            <p className="mt-1 text-sm text-[#475569]">Insert your first snapshot or update the latest one.</p>
+          </div>
 
-        <div className="rounded-3xl border border-emerald-300/15 bg-slate-950/70 p-6 shadow-xl shadow-emerald-950/25 backdrop-blur-xl">
-          <h2 className="text-xl font-semibold text-white">Update Metrics</h2>
-          <p className="mt-1 text-sm text-slate-400">Insert your first snapshot or update the latest one.</p>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <MetricInput label="MRR" value={metrics.mrr} onChange={(value) => handleMetricChange("mrr", value)} />
-            <MetricInput
+          <div className="grid gap-4 sm:grid-cols-2">
+            <MetricInputField label="MRR ($)" value={metrics.mrr} onChange={(value) => handleMetricChange("mrr", value)} />
+            <MetricInputField
               label="Churn Rate (%)"
               value={metrics.churn_rate}
               onChange={(value) => handleMetricChange("churn_rate", value)}
             />
-            <MetricInput
-              label="Expenses"
+            <MetricInputField
+              label="Expenses ($)"
               value={metrics.expenses}
               onChange={(value) => handleMetricChange("expenses", value)}
             />
-            <MetricInput label="Profit" value={metrics.profit} onChange={(value) => handleMetricChange("profit", value)} />
+            <MetricInputField label="Profit ($)" value={metrics.profit} onChange={(value) => handleMetricChange("profit", value)} />
           </div>
 
-          {errorMessage ? <p className="mt-4 text-sm text-rose-300">{errorMessage}</p> : null}
-          {statusMessage ? <p className="mt-4 text-sm text-emerald-300">{statusMessage}</p> : null}
+          {errorMessage ? (
+            <div className="mt-4 rounded-xl border border-[#FEE2E2] bg-[#FFF5F5] px-4 py-3">
+              <p className="text-sm text-[#EF4444]">{errorMessage}</p>
+            </div>
+          ) : null}
+          {statusMessage ? (
+            <div className="mt-4 rounded-xl border border-[#DCFCE7] bg-[#F0FFF4] px-4 py-3">
+              <p className="text-sm text-[#22C55E]">{statusMessage}</p>
+            </div>
+          ) : null}
 
-          <div className="mt-6">
+          <div className="mt-5">
             <Button type="button" isLoading={isSaving} disabled={!canSave} onClick={saveMetrics}>
               {metricsId ? "Update Metrics" : "Save Metrics"}
             </Button>
@@ -181,19 +254,38 @@ export default function DashboardPage() {
   );
 }
 
-function MetricCard({ label, value, suffix = "" }: { label: string; value: number; suffix?: string }) {
+function MetricCard({
+  label,
+  value,
+  suffix = "",
+  icon,
+  iconBg,
+  iconColor,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  icon: React.ReactNode;
+  iconBg: string;
+  iconColor: string;
+}) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-      <p className="text-sm text-slate-400">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-white">
-        {value}
+    <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-all duration-150 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-0.5">
+      <div className="flex items-start justify-between">
+        <p className="text-sm font-medium text-[#475569]">{label}</p>
+        <span className={`inline-flex h-9 w-9 items-center justify-center rounded-xl ${iconBg} ${iconColor}`}>
+          {icon}
+        </span>
+      </div>
+      <p className="mt-4 text-2xl font-semibold tracking-tight text-[#0F172A]">
+        {value.toLocaleString()}
         {suffix}
       </p>
     </div>
   );
 }
 
-function MetricInput({
+function MetricInputField({
   label,
   value,
   onChange,
@@ -203,14 +295,14 @@ function MetricInput({
   onChange: (value: string) => void;
 }) {
   return (
-    <label className="space-y-2">
-      <span className="text-sm text-slate-300">{label}</span>
+    <label className="space-y-1.5">
+      <span className="text-sm font-medium text-[#0F172A]">{label}</span>
       <input
         type="number"
         step="0.01"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-2xl border border-emerald-300/20 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20"
+        className="w-full rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm text-[#0F172A] placeholder:text-[#94A3B8] outline-none transition-all duration-150 focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/15"
       />
     </label>
   );

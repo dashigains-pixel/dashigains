@@ -14,8 +14,8 @@ type InputFieldProps = {
 
 export function InputField({ label, type, placeholder, value, name, error, onChange }: InputFieldProps) {
   return (
-    <div className="space-y-2">
-      <label htmlFor={name} className="text-sm font-medium text-slate-200">
+    <div className="space-y-1.5">
+      <label htmlFor={name} className="text-sm font-medium text-[#0F172A]">
         {label}
       </label>
       <input
@@ -25,13 +25,13 @@ export function InputField({ label, type, placeholder, value, name, error, onCha
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full rounded-2xl border bg-slate-900/70 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition ${
+        className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-[#0F172A] placeholder:text-[#94A3B8] outline-none transition-all duration-150 ${
           error
-            ? "border-rose-400/60 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/25"
-            : "border-emerald-300/20 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20"
+            ? "border-[#EF4444] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20"
+            : "border-[#E2E8F0] focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/15"
         }`}
       />
-      {error ? <p className="text-xs text-rose-300">{error}</p> : null}
+      {error ? <p className="text-xs text-[#EF4444]">{error}</p> : null}
     </div>
   );
 }
